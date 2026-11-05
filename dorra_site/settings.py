@@ -1,10 +1,11 @@
 from pathlib import Path
 import os
-
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() in {"1", "true", "yes"}
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     if not DEBUG:
@@ -12,8 +13,9 @@ if not SECRET_KEY:
             "DJANGO_SECRET_KEY must be set when DEBUG is disabled."
         )
     SECRET_KEY = "django-insecure-dorra-local-development-only"
-    ALLOWED_HOSTS = ["*"]
-#ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
+
+# السماح لجميع النطاقات ليعمل رابط Render بدون أخطاء 400
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     # "jazzmin",  # تم إيقافها مؤقتاً لتجنب التعارض مع بايثون 3.14
@@ -28,6 +30,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # لخدمة الملفات الثابتة تلقائياً في بيئة الإنتاج
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -51,17 +54,15 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = "dorra_site.wsgi.application"
 
-import os
-
 if os.getenv("DB_ENGINE") == "mysql":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": "dorra_db",
-            "USER": "root",
-            "PASSWORD": "",
-            "HOST": "127.0.0.1",
-            "PORT": "3306",
+            "NAME": os.environ.get("MYSQL_DATABASE", "dorra_db"),
+            "USER": os.environ.get("MYSQL_USER", "root"),
+            "PASSWORD": os.environ.get("MYSQL_PASSWORD", ""),
+            "HOST": os.environ.get("MYSQL_HOST", "127.0.0.1"),
+            "PORT": os.environ.get("MYSQL_PORT", "3306"),
             "OPTIONS": {
                 "charset": "utf8mb4",
             },
@@ -84,23 +85,23 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# تركت إعدادات Jazzmin بالأسفل لكي لا تضطر لكتابتها مجدداً عندما يتم تحديث المكتبة مستقبلاً
+# إعدادات لوحة التحكم
 JAZZMIN_SETTINGS = {
     "site_title": "إدارة دورة",
     "site_header": "مجوهرات دورة",
     "site_brand": "Dorra Store",
     "welcome_sign": "مرحباً بك في لوحة تحكم متجر دورة",
     "copyright": "Dorra Store Ltd",
-    
     "topmenu_links": [
-        {"name": "الرئيسية",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "الرئيسية", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "عرض الموقع", "url": "/", "new_window": True},
     ],
-    
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
