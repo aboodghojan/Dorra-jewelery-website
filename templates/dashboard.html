@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dorra Store Dashboard</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f4f7fb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .sidebar { width: 260px; min-height: 100vh; background: #fff; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
+        .main-content { flex-grow: 1; padding: 20px; }
+        .nav-link { color: #6c757d; font-weight: 500; padding: 12px 20px; margin-bottom: 5px; border-radius: 8px; }
+        .nav-link:hover, .nav-link.active { background-color: #e9f2ff; color: #0d6efd; }
+        .nav-link i { width: 25px; }
+        .topbar { background: #fff; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); margin-bottom: 25px; }
+        .stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); border: none; }
+        .stat-card .title { font-size: 0.85rem; color: #8a92a6; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: #232d42; margin: 10px 0; }
+        .stat-card .trend.up { color: #1aa053; font-size: 0.85rem; }
+        .stat-card .trend.down { color: #c03221; font-size: 0.85rem; }
+        .chart-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); margin-bottom: 25px; }
+        .mini-chart { height: 60px; width: 100%; }
+        .earning-item { display: flex; align-items: center; margin-bottom: 15px; }
+        .earning-item img { width: 40px; height: 40px; border-radius: 8px; margin-right: 15px; background: #f4f7fb; }
+        .progress-slim { height: 6px; border-radius: 3px; }
+    </style>
+</head>
+<body class="d-flex">
+
+    <!-- Sidebar -->
+    <nav class="sidebar p-3">
+        <div class="d-flex align-items-center mb-4 px-2">
+            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-gem me-2"></i>Dorra Admin</h4>
+        </div>
+        <div class="d-flex align-items-center mb-4 px-2">
+            <img src="https://ui-avatars.com/api/?name=Abdullah&background=0D8ABC&color=fff" class="rounded-circle me-2" width="40" alt="User">
+            <div>
+                <h6 class="m-0 fw-bold">Welcome</h6>
+                <small class="text-muted">Abdullah</small>
+            </div>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-chart-pie"></i> Overview</a></li>
+            <li class="nav-item"><a href="/admin/store/order/" class="nav-link"><i class="fas fa-shopping-bag"></i> Sales (Data Entry)</a></li>
+            <li class="nav-item"><a href="/admin/auth/user/" class="nav-link"><i class="fas fa-users"></i> Members</a></li>
+            <li class="nav-item mt-4 mb-2"><small class="text-muted px-3 fw-bold">PRODUCTS SECTION</small></li>
+            <li class="nav-item"><a href="/admin/store/product/" class="nav-link"><i class="fas fa-box"></i> Products</a></li>
+            <li class="nav-item"><a href="/admin/" class="nav-link"><i class="fas fa-cog"></i> Advanced Settings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar d-flex justify-content-between align-items-center">
+            <div class="input-group" style="width: 300px;">
+                <span class="input-group-text bg-transparent border-0"><i class="fas fa-search text-muted"></i></span>
+                <input type="text" class="form-control border-0 bg-transparent shadow-none" placeholder="Search">
+            </div>
+            <div>
+                <button class="btn btn-light rounded-circle me-2"><i class="fas fa-bell"></i></button>
+                <a href="/admin/" class="btn btn-primary rounded-pill px-4">Go to Data Entry</a>
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="title">Conversion Rate</div>
+                    <div class="value">{{ conversion_rate }} <span class="trend up"><i class="fas fa-arrow-up"></i> 1.1%</span></div>
+                    <canvas id="chart1" class="mini-chart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="title">Unique Purchases</div>
+                    <div class="value">{{ unique_purchases }} <span class="trend down"><i class="fas fa-arrow-down"></i> 0.5%</span></div>
+                    <canvas id="chart2" class="mini-chart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="title">Avg. Order Value</div>
+                    <div class="value">{{ avg_order_value }} <span class="trend down"><i class="fas fa-arrow-down"></i> 0.7%</span></div>
+                    <canvas id="chart3" class="mini-chart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="title">Order Quantity</div>
+                    <div class="value">{{ order_quantity }} <span class="trend up"><i class="fas fa-arrow-up"></i> 2.5%</span></div>
+                    <canvas id="chart4" class="mini-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Charts Area -->
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="chart-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="m-0 fw-bold">Order Overview</h5>
+                        <div>
+                            <span class="badge bg-primary text-light px-3 py-2 rounded-pill me-2">Weeks</span>
+                            <span class="badge bg-danger text-light px-3 py-2 rounded-pill">Monthly</span>
+                        </div>
+                    </div>
+                    <canvas id="mainOverviewChart" height="120"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-card h-100">
+                    <h5 class="fw-bold mb-4">Sales Overview</h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div><h6 class="m-0 fw-bold">iPod</h6><small class="text-muted">25 min ago</small></div>
+                        <span class="text-success fw-bold">+ $250</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div><h6 class="m-0 fw-bold">iMac</h6><small class="text-muted">5 hour ago</small></div>
+                        <span class="text-danger fw-bold">- $589</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <div><h6 class="m-0 fw-bold">iPhone X</h6><small class="text-muted">3 day ago</small></div>
+                        <span class="text-success fw-bold">+ $1292</span>
+                    </div>
+                    <div class="mt-auto pt-4 border-top">
+                        <small class="text-muted text-uppercase fw-bold">Total Sales</small>
+                        <h3 class="fw-bold text-primary">{{ total_sales_k }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // دالة مساعدة لرسم المخططات المصغرة
+        function createMiniChart(ctxId, color, data) {
+            new Chart(document.getElementById(ctxId), {
+                type: 'line',
+                data: {
+                    labels: ['1','2','3','4','5','6','7'],
+                    datasets: [{ data: data, borderColor: color, borderWidth: 2, pointRadius: 0, tension: 0.4 }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // تفعيل المخططات المصغرة الأربعة
+        createMiniChart('chart1', '#0d6efd', [12, 19, 15, 25, 22, 30, 28]);
+        createMiniChart('chart2', '#dc3545', [28, 22, 30, 25, 15, 19, 12]);
+        createMiniChart('chart3', '#232d42', [15, 25, 12, 30, 28, 19, 22]);
+        createMiniChart('chart4', '#dc3545', [10, 20, 15, 25, 20, 30, 25]);
+
+        // المخطط الرئيسي (الموجة المتداخلة)
+        const ctxMain = document.getElementById('mainOverviewChart').getContext('2d');
+        
+        // تدرج لوني للخط الأزرق
+        let gradientBlue = ctxMain.createLinearGradient(0, 0, 0, 400);
+        gradientBlue.addColorStop(0, 'rgba(13, 110, 253, 0.5)');
+        gradientBlue.addColorStop(1, 'rgba(13, 110, 253, 0.0)');
+
+        new Chart(ctxMain, {
+            type: 'line',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+                datasets: [
+                    {
+                        label: 'Current Month',
+                        data: [65, 59, 80, 81, 56, 55, 40, 70, 90],
+                        borderColor: '#0d6efd',
+                        backgroundColor: gradientBlue,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#0d6efd',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Previous Month',
+                        data: [45, 75, 40, 60, 45, 65, 30, 50, 60],
+                        borderColor: '#dc3545',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#e9ecef' } },
+                    x: { grid: { display: false } }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html>

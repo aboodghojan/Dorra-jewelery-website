@@ -1,0 +1,101 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>الدفع | DorraJewelery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{% url 'home' %}">
+      <img src="{% static 'images/logo.svg' %}" alt="DorraJewelery" class="site-logo">
+    </a>
+    <div class="checkout-header-tools">
+      <select id="checkoutLanguage" aria-label="Language"><option value="ar">عربي</option><option value="en">English</option></select>
+      <a class="text-link" href="{% url 'home' %}" data-checkout-i18n="backToShop">← العودة للمتجر</a>
+    </div>
+  </header>
+
+  <main class="checkout-page">
+    <div class="checkout-heading">
+      <p class="eyebrow">DORRA CHECKOUT</p>
+      <h1 data-checkout-i18n="checkoutTitle">إتمام الطلب</h1>
+      <div class="steps"><span class="active">1 <small data-checkout-i18n="address">العنوان</small></span><i></i><span>2 <small data-checkout-i18n="addons">الإضافات</small></span><i></i><span>3 <small data-checkout-i18n="confirmation">التأكيد</small></span></div>
+    </div>
+    {% if error %}<div class="form-error" role="alert" data-checkout-error>{{ error }}</div>{% endif %}
+    <form method="post" id="checkoutForm">
+      {% csrf_token %}
+      <input type="hidden" name="cart" id="checkoutCart">
+      <div class="checkout-grid">
+        <section class="checkout-card">
+          <h2 data-checkout-i18n="deliveryDetails">بيانات العنوان والتوصيل</h2>
+          <div class="form-grid">
+            <label><span data-checkout-i18n="name">الاسم</span><input name="customer_name" maxlength="120" autocomplete="name" required></label>
+            <label><span data-checkout-i18n="phone">رقم الهاتف</span><input name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder="+971 50 000 0000" required></label>
+            <label><span data-checkout-i18n="country">الدولة</span><select name="country" autocomplete="country-name" required><option value="الإمارات العربية المتحدة" data-country="uae">الإمارات العربية المتحدة</option><option data-country="sa">السعودية</option><option data-country="kw">الكويت</option><option data-country="qa">قطر</option><option data-country="bh">البحرين</option><option data-country="om">عمان</option><option data-country="jo">الأردن</option><option data-country="eg">مصر</option><option data-country="us">الولايات المتحدة</option><option data-country="uk">المملكة المتحدة</option><option data-country="other">أخرى</option></select></label>
+            <label><span data-checkout-i18n="city">المدينة</span><input name="city" maxlength="80" autocomplete="address-level2" required></label>
+            <label><span data-checkout-i18n="district">المنطقة</span><input name="district" maxlength="120" autocomplete="address-level1" required></label>
+            <label><span data-checkout-i18n="street">اسم ورقم الشارع</span><input name="street" maxlength="160" autocomplete="street-address" required></label>
+          </div>
+          <label><span data-checkout-i18n="notes">ملاحظات إضافية</span><textarea name="notes" rows="3"></textarea></label>
+          <label class="check-line"><input type="checkbox" name="is_gift"><span data-checkout-i18n="sendAsGift">إرسال كهدية</span></label>
+        </section>
+
+        <section class="checkout-card">
+          <h2 data-checkout-i18n="giftAddons">إضافات الهدية</h2>
+          <p class="notice" data-checkout-i18n="addonNote">تطبق رسوم كل إضافة مرة واحدة على الطلب.</p>
+          <label class="check-line addon-option">
+            <input type="checkbox" name="gift_packaging" id="giftPackaging">
+            <span><span data-checkout-i18n="giftPackaging">تغليف هدية</span> <b>+5.00 AED</b></span>
+          </label>
+          <label class="check-line addon-option">
+            <input type="checkbox" name="custom_message_enabled" id="customMessageEnabled">
+            <span><span data-checkout-i18n="customMessage">رسالة مخصصة</span> <b>+5.00 AED</b></span>
+          </label>
+          <label id="giftMessageLabel" for="customGiftMessage" data-checkout-i18n="messageText">نص الرسالة</label>
+          <textarea id="customGiftMessage" name="custom_gift_message" maxlength="300" rows="4" placeholder="اكتبي رسالتك هنا..." disabled></textarea>
+        </section>
+
+        <section class="checkout-card">
+          <h2 data-checkout-i18n="paymentSection">التوصيل والخصم والدفع</h2>
+          <div class="notice" data-checkout-i18n="shippingNote">التوصيل من 1 إلى 3 أيام · رسوم التوصيل <b>30 د.إ</b></div>
+          <label><span data-checkout-i18n="promoCode">كود الخصم</span><input name="promo_code" id="promoCode" placeholder="DORRA10"></label>
+          <div class="payment-options">
+            <label><input type="radio" name="payment_method" value="card" required><span data-checkout-i18n="payByCard">بطاقة ائتمانية / دفع بنكي</span></label>
+            <label><input type="radio" name="payment_method" value="cash"><span data-checkout-i18n="cashOnDelivery">الدفع عند الاستلام</span></label>
+            <label><input type="radio" name="payment_method" value="whatsapp"><span data-checkout-i18n="confirmByWhatsapp">تأكيد الطلب عبر واتساب</span></label>
+          </div>
+        </section>
+
+        <section class="checkout-card invoice-card">
+          <h2 data-checkout-i18n="orderSummary">ملخص الطلب</h2>
+          <div id="checkoutItems" class="checkout-items" aria-live="polite"></div>
+          <div class="invoice-row"><span data-checkout-i18n="subtotal">المجموع الجزئي</span><b id="checkoutSubtotal">0.00 AED</b></div>
+          <div class="invoice-row"><span data-checkout-i18n="giftPackaging">تغليف الهدية</span><b id="checkoutPackagingFee">0.00 AED</b></div>
+          <div class="invoice-row"><span data-checkout-i18n="customMessage">الرسالة المخصصة</span><b id="checkoutMessageFee">0.00 AED</b></div>
+          <div class="invoice-row"><span data-checkout-i18n="shipping">التوصيل</span><b>30.00 AED</b></div>
+          <div class="invoice-row"><span data-checkout-i18n="serviceFee">رسوم الخدمة</span><b>7.00 AED</b></div>
+          <div class="invoice-row"><span data-checkout-i18n="discount">الخصم</span><b id="checkoutDiscount">0.00 AED</b></div>
+          <div class="invoice-total"><span data-checkout-i18n="grandTotal">الإجمالي النهائي</span><b id="checkoutTotal">0.00 AED</b></div>
+          <label class="check-line terms"><input type="checkbox" name="terms" required><span data-checkout-i18n="agreeToTerms">أوافق على</span> <button type="button" id="termsButton" data-checkout-i18n="termsButton">الشروط والأحكام وسياسة الإرجاع</button></label>
+          <button class="primary-button submit-order" id="submitOrder" type="submit" data-checkout-i18n="placeOrder">تأكيد الطلب</button>
+        </section>
+      </div>
+    </form>
+  </main>
+
+  <div class="modal-backdrop" id="termsBackdrop"></div>
+  <section class="terms-modal" id="termsModal" aria-modal="true" aria-labelledby="termsTitle" role="dialog">
+    <button id="closeTerms" type="button" aria-label="إغلاق">×</button>
+    <h2 id="termsTitle" data-checkout-i18n="policyTitle">سياسة الإرجاع والشحن والإلغاء</h2>
+    <p data-checkout-i18n="returnTerms"><b>سياسة الإرجاع والاستبدال:</b><br>لا يوجد لدينا إرجاع إلا في حالة عيب مصنعي يتم الاستبدال.<br>يجب تقديم طلب الإرجاع خلال 3 أيام من استلام المنتج.<br>يجب أن تكون المنتجات المُعادة غير مستخدمة وفي عبوتها الأصلية.<br>في حالة طلب استبدال من دون أي عيوب يتم دفع رسوم التوصيل.</p>
+    <p data-checkout-i18n="shippingTerms"><b>سياسة الشحن:</b><br>يجب على العملاء تقديم تفاصيل شحن دقيقة.<br>يتحمل العميل مسؤولية تتبع الشحنات والرد على مكالمات التسليم.<br>للطلبات الدولية، يتحمل العميل الرسوم الجمركية وضريبة القيمة المضافة.</p>
+    <p data-checkout-i18n="cancellationTerms"><b>سياسة الإلغاء:</b><br>لا يمكن إلغاء الطلبات بعد تأكيدها.</p>
+  </section>
+  {{ checkout_products|json_script:"checkout-products-data" }}
+  <script src="{% static 'checkout.js' %}"></script>
+</body>
+</html>

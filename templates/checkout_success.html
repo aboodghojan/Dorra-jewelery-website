@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تم تأكيد الطلب | DorraJewelery</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <main class="success-page">
+    <select id="successLanguage" class="success-language" aria-label="Language">
+      <option value="ar">عربي</option>
+      <option value="en">English</option>
+    </select>
+    <div class="success-mark" aria-hidden="true">✓</div>
+    <p class="eyebrow">DORRA JEWELERY</p>
+    <h1 data-success-i18n="successTitle">شكرًا لطلبك</h1>
+    <p><span data-success-i18n="orderPlaced">تم تسجيل الطلب رقم</span> <b>#{{ order.id }}</b> <span data-success-i18n="forAmount">بقيمة</span> <b id="successTotal" data-total="{{ order.total|floatformat:2 }}">{{ order.total|floatformat:2 }} د.إ</b>.</p>
+    <p data-success-i18n="contactSoon">سنتواصل معك لتأكيد تفاصيل التوصيل.</p>
+    <a class="primary-button" href="{{ invoice_url }}" target="_blank" rel="noopener" data-success-i18n="invoiceLink">عرض الفاتورة / حفظ PDF</a>
+    <a class="text-link" href="{% url 'home' %}" data-success-i18n="returnToShop">العودة إلى المتجر</a>
+  </main>
+  <script src="{% static 'success.js' %}"></script>
+</body>
+</html>

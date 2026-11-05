@@ -1,0 +1,80 @@
+{% load l10n static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>فاتورة الطلب #{{ order.pk }} | DorraJewelery</title>
+    <link rel="stylesheet" href="{% static 'invoice.css' %}">
+</head>
+<body>
+    <main class="invoice">
+        <header class="invoice-header">
+            <img src="{% static 'images/logo.svg' %}" alt="DorraJewelery">
+            <h1>فاتورة مشتريات <span>/ Purchase Invoice</span></h1>
+            <p>رقم الفاتورة #{{ order.pk }} · {{ order.created_at|date:"Y-m-d H:i" }}</p>
+        </header>
+
+        <section class="invoice-items" aria-labelledby="items-title">
+            <h2 id="items-title">المنتجات / Items</h2>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">المنتج / Item</th>
+                            <th scope="col">الكمية / Qty</th>
+                            <th scope="col">سعر الوحدة / Unit price</th>
+                            <th scope="col">الإجمالي / Line total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.unit_price|unlocalize }} AED</td>
+                                <td>{{ item.line_total|unlocalize }} AED</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="invoice-totals" aria-label="ملخص الفاتورة">
+            <div><span>المجموع / Subtotal</span><strong>{{ order.subtotal|unlocalize }} AED</strong></div>
+            {% if order.gift_packaging %}
+                <div><span>تغليف هدية / Gift packaging</span><strong>{{ packaging_fee|unlocalize }} AED</strong></div>
+            {% endif %}
+            {% if order.custom_message_enabled %}
+                <div><span>رسالة مخصصة / Custom message</span><strong>{{ message_fee|unlocalize }} AED</strong></div>
+            {% endif %}
+            <div><span>التوصيل / Shipping</span><strong>{{ order.shipping_fee|unlocalize }} AED</strong></div>
+            <div><span>رسوم الخدمة / Service fee</span><strong>{{ order.service_fee|unlocalize }} AED</strong></div>
+            {% if order.discount %}
+                <div><span>الخصم / Discount</span><strong>-{{ order.discount|unlocalize }} AED</strong></div>
+            {% endif %}
+            <div class="grand-total"><span>الإجمالي النهائي / Grand total</span><strong>{{ order.total|unlocalize }} AED</strong></div>
+        </section>
+
+        <section class="customer-details" aria-labelledby="customer-title">
+            <h2 id="customer-title">بيانات العميل / Customer details</h2>
+            <dl>
+                <div><dt>الاسم / Name</dt><dd>{{ order.customer_name }}</dd></div>
+                <div><dt>الهاتف / Phone</dt><dd>{{ order.phone }}</dd></div>
+                <div><dt>العنوان / Address</dt><dd>{{ address }}</dd></div>
+                {% if order.custom_message_enabled and order.custom_gift_message %}
+                    <div class="custom-message"><dt>الرسالة / Gift message</dt><dd>{{ order.custom_gift_message|linebreaksbr }}</dd></div>
+                {% endif %}
+            </dl>
+        </section>
+
+        <footer class="invoice-footer">
+            <p>Instagram: @dorrajewelery · WhatsApp: +971 503375035</p>
+            <p>شكراً لثقتكم بمتجرنا ونتمنى أن نراكم مجدداً / Thank you for your trust, we hope to see you again</p>
+        </footer>
+        <button class="print-button" id="printInvoice" type="button">طباعة / Save as PDF</button>
+    </main>
+    <script src="{% static 'invoice.js' %}"></script>
+</body>
+</html>

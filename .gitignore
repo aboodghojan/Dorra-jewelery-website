@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*.class
+
+# Local Databases & Backups
+db.sqlite3
+db.sqlite3-journal
+db.sqlite3.bak
+*.json
+
+# Environment Secrets
+.env
+
+# User Media & Uploads
+media/
+
+# Editors & OS
+.vscode/
+.idea/
+Thumbs.db

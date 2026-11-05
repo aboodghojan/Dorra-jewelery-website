@@ -1,0 +1,89 @@
+{% extends "admin/base_site.html" %}
+{% load admin_dashboard l10n %}
+
+{% block content %}
+  {% dashboard_metrics request.user as metrics %}
+  <div class="admin-dashboard" dir="rtl">
+    <header class="dashboard-heading">
+      <div>
+        <p class="dashboard-eyebrow">DORRA STORE</p>
+        <h1>نظرة عامة</h1>
+        <p>ملخص المنتجات والطلبات في متجرك.</p>
+      </div>
+      {% if metrics.can_view_orders %}
+        <a class="dashboard-primary-link" href="{% url 'admin:store_order_changelist' %}">إدارة الطلبات</a>
+      {% endif %}
+    </header>
+
+    <section class="dashboard-kpis" aria-label="مؤشرات المتجر">
+      {% if metrics.can_view_products %}
+        <a class="dashboard-kpi" href="{% url 'admin:store_product_changelist' %}">
+          <span class="dashboard-kpi-icon icon-products" aria-hidden="true"><i class="fas fa-gem"></i></span>
+          <span class="dashboard-kpi-label">إجمالي المنتجات</span>
+          <strong>{{ metrics.products.total }}</strong>
+          <span class="dashboard-kpi-detail">{{ metrics.products.active }} منتج نشط</span>
+        </a>
+      {% endif %}
+      {% if metrics.can_view_orders %}
+        <a class="dashboard-kpi" href="{% url 'admin:store_order_changelist' %}?status__exact=pending">
+          <span class="dashboard-kpi-icon icon-pending" aria-hidden="true"><i class="fas fa-clock"></i></span>
+          <span class="dashboard-kpi-label">طلبات قيد الانتظار</span>
+          <strong>{{ metrics.orders.pending }}</strong>
+          <span class="dashboard-kpi-detail">تحتاج إلى المتابعة</span>
+        </a>
+        <a class="dashboard-kpi" href="{% url 'admin:store_order_changelist' %}?status__exact=delivered">
+          <span class="dashboard-kpi-icon icon-sales" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
+          <span class="dashboard-kpi-label">المبيعات المكتملة</span>
+          <strong>{{ metrics.orders.completed_sales|unlocalize }} <small>د.إ</small></strong>
+          <span class="dashboard-kpi-detail">إجمالي الطلبات المسلّمة</span>
+        </a>
+      {% endif %}
+    </section>
+
+    {% if metrics.can_view_orders %}
+      <section class="dashboard-panel" aria-labelledby="recent-orders-title">
+        <div class="dashboard-panel-heading">
+          <div>
+            <h2 id="recent-orders-title">أحدث الطلبات</h2>
+            <p>آخر الطلبات المسجلة في المتجر.</p>
+          </div>
+          <a href="{% url 'admin:store_order_changelist' %}">عرض كل الطلبات <i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+        </div>
+        <div class="dashboard-table-wrap">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th scope="col">رقم الطلب</th>
+                <th scope="col">العميل</th>
+                <th scope="col">الإجمالي</th>
+                <th scope="col">الحالة</th>
+                <th scope="col">التاريخ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in metrics.recent_orders %}
+                <tr>
+                  <td><a href="{% url 'admin:store_order_change' order.pk %}">#{{ order.pk }}</a></td>
+                  <td>{{ order.customer_name }}</td>
+                  <td>{{ order.total|unlocalize }} د.إ</td>
+                  <td><span class="dashboard-status status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                  <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="5" class="dashboard-empty">لا توجد طلبات حتى الآن.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if app_list %}
+      <section class="dashboard-apps" aria-label="تطبيقات الإدارة">
+        {% for app in app_list %}
+          {% include "admin/app_list.html" with app=app %}
+        {% endfor %}
+      </section>
+    {% endif %}
+  </div>
+{% endblock %}

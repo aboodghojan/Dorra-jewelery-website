@@ -1,0 +1,112 @@
+{% load l10n static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>لوحة المتجر | مجوهرات درّة</title>
+    <link rel="stylesheet" href="{% static 'admin-dashboard-page.css' %}">
+</head>
+<body>
+    <header class="dashboard-header">
+        <a class="brand" href="{% url 'admin:index' %}">مجوهرات درّة</a>
+        <nav class="header-actions" aria-label="التنقل الرئيسي">
+            <a href="{% url 'admin:index' %}">لوحة الإدارة</a>
+            {% if can_view_orders %}
+                <a href="{% url 'admin:store_order_changelist' %}">الطلبات</a>
+            {% endif %}
+            {% if can_view_products %}
+                <a href="{% url 'admin:store_product_changelist' %}">المنتجات</a>
+            {% endif %}
+            <form method="post" action="{% url 'admin:logout' %}">
+                {% csrf_token %}
+                <button type="submit">تسجيل الخروج</button>
+            </form>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <section class="page-heading">
+            <div>
+                <p class="eyebrow">DORRA STORE</p>
+                <h1>نظرة عامة</h1>
+                <p>ملخص محدث لأداء المتجر.</p>
+            </div>
+            <span class="staff-name">{{ request.user.get_username }}</span>
+        </section>
+
+        <section class="kpi-grid" aria-label="مؤشرات المتجر">
+            {% if can_view_orders %}
+                <article class="kpi-card">
+                    <span class="kpi-label">إجمالي الطلبات</span>
+                    <strong>{{ orders_count }}</strong>
+                    <span class="kpi-detail">كل الطلبات المسجلة</span>
+                </article>
+                <article class="kpi-card">
+                    <span class="kpi-label">المبيعات المسلّمة</span>
+                    <strong>{{ sales|unlocalize }} <small>د.إ</small></strong>
+                    <span class="kpi-detail">مجموع الطلبات التي تم تسليمها</span>
+                </article>
+            {% endif %}
+            {% if can_view_products %}
+                <article class="kpi-card">
+                    <span class="kpi-label">المنتجات</span>
+                    <strong>{{ products_count }}</strong>
+                    <span class="kpi-detail">كل المنتجات المسجلة</span>
+                </article>
+            {% endif %}
+        </section>
+
+        {% if can_view_orders %}
+            <section class="panel" aria-labelledby="orders-heading">
+                <div class="panel-heading">
+                    <div>
+                        <h2 id="orders-heading">أحدث الطلبات</h2>
+                        <p>آخر خمسة طلبات مسجلة في المتجر.</p>
+                    </div>
+                    <a class="text-link" href="{% url 'admin:store_order_changelist' %}">إدارة الطلبات</a>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">رقم الطلب</th>
+                                <th scope="col">العميل</th>
+                                <th scope="col">الإجمالي</th>
+                                <th scope="col">الحالة</th>
+                                <th scope="col">تاريخ الإنشاء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                                <tr>
+                                    <td><a href="{% url 'admin:store_order_change' order.pk %}">#{{ order.pk }}</a></td>
+                                    <td>{{ order.customer_name }}</td>
+                                    <td>{{ order.total|unlocalize }} د.إ</td>
+                                    <td><span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                                    <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td class="empty-state" colspan="5">لا توجد طلبات حتى الآن.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endif %}
+
+        {% if can_view_products %}
+            <section class="panel products-panel" aria-labelledby="products-heading">
+                <div class="panel-heading">
+                    <div>
+                        <h2 id="products-heading">إدارة المنتجات</h2>
+                        <p>ابحث عن المنتجات وصفّها وحدّث مخزون العرض من لوحة الإدارة.</p>
+                    </div>
+                    <a class="primary-link" href="{% url 'admin:store_product_changelist' %}">عرض المنتجات</a>
+                </div>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DorraJewelery | مجوهرات درّة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}?v=gallery-i18n">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top"><img src="{% static 'images/logo.svg' %}" alt="DorraJewelery" class="site-logo"></a>
+    <nav aria-label="Main navigation">
+      <a href="#shop" data-i18n="navShop">المتجر</a>
+      <a href="#about" data-i18n="navAbout">عن درّة</a>
+      <a href="#support" data-i18n="navSupport">المساعدة</a>
+    </nav>
+    <div class="header-tools">
+      <button id="themeToggle" class="tool-button" type="button" aria-label="Toggle color theme">☼</button>
+      <select id="languageSelect" aria-label="Language"><option value="ar">عربي</option><option value="en">English</option></select>
+      <button class="cart-button" id="cartButton" type="button"><span data-i18n="cart">السلة</span><b id="cartCount">0</b></button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">DORRA JEWELERY · UAE</p>
+        <h1 data-i18n-html="heroTitle">كل قطعة<br><em>لها حكاية.</em></h1>
+        <p data-i18n="heroText">مجوهرات مختارة بعناية لترافق لحظاتك الخاصة. تفاصيل ناعمة، حضور لا يُنسى، وأناقة تشبهك.</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#shop" data-i18n="shopNow">تسوقي المجموعة ←</a>
+          <a class="text-link" href="#about" data-i18n="discover">اكتشفي درّة</a>
+        </div>
+      </div>
+      <div class="hero-art" id="heroArt">
+        <div class="art-glow"></div>
+        <div class="jewelry-display"><span class="display-word">Dorra<br><small>JEWELERY</small></span></div>
+        <div class="art-caption"><span>EST. 2021</span><br><strong>MADE TO SHINE</strong></div>
+      </div>
+    </section>
+
+    <section class="marquee"><span data-i18n="marqueeBrand">مجوهرات درّة</span><span data-i18n="marqueeMoment">مصممة للحظاتك</span><span data-i18n="marqueeBrand">مجوهرات درّة</span></section>
+
+    <section class="shop" id="shop">
+      <div class="section-heading">
+        <div><p class="eyebrow">THE COLLECTION</p><h2 data-i18n="collection">اختاري قطعتك</h2></div>
+        <p data-i18n="collectionText">قطع بسيطة، فاخرة، وتدوم معك.</p>
+      </div>
+      <div class="catalog-tools">
+        <input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchAria" placeholder="ابحثي عن قطعة..." aria-label="البحث">
+        <select id="sortSelect" data-i18n-aria="sortAria" aria-label="ترتيب المنتجات">
+          <option value="newest" data-i18n="sortNewest">الأجدد</option>
+          <option value="oldest" data-i18n="sortOldest">الأقدم</option>
+          <option value="price_asc" data-i18n="sortPriceAsc">السعر: من الأقل للأعلى</option>
+          <option value="price_desc" data-i18n="sortPriceDesc">السعر: من الأعلى للأقل</option>
+        </select>
+      </div>
+      <div class="filter-row" id="categoryFilters"></div>
+      <div class="material-row">
+        <button class="material-filter active" data-material="all" type="button" data-i18n="materialAll">الكل</button>
+        <button class="material-filter" data-material="silver" type="button" data-i18n="materialSilver">فضي</button>
+        <button class="material-filter" data-material="gold" type="button" data-i18n="materialGold">ذهبي</button>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-mark"><span>D</span><small>JEWELERY</small></div>
+      <div>
+        <p class="eyebrow">THE DORRA STORY</p>
+        <h2 data-i18n-html="aboutTitle">لمعة صغيرة،<br><em>أثر كبير.</em></h2>
+        <p data-i18n="aboutText">في درّة نؤمن أن المجوهرات ليست مجرد قطعة. هي ذكرى، هدية، أو لحظة تختارين الاحتفاظ بها إلى الأبد.</p>
+        <a class="text-link" href="#support" data-i18n="contact">تواصلي معنا ←</a>
+      </div>
+    </section>
+
+    <section class="support-section" id="support">
+      <div>
+        <p class="eyebrow">DORRA ASSISTANT</p>
+        <h2 data-i18n-html="assistantTitle">تحتاجين مساعدة؟<br><em>اسأليني.</em></h2>
+        <p data-i18n="assistantText">اسألي عن المقاسات، الأسعار أو التوصيل.</p>
+      </div>
+      <div class="chat-box">
+        <div class="chat-top"><span class="status-dot"></span><strong>DorraJewelery Assistant</strong><small data-i18n="online">متصل الآن</small></div>
+        <div class="messages" id="messages"><div class="message bot" data-i18n="chatWelcome">أهلًا بكِ في مجوهرات درّة، كيف أساعدك؟</div></div>
+        <form class="chat-form" id="chatForm">{% csrf_token %}
+          <input id="chatInput" autocomplete="off" data-i18n-placeholder="chatPlaceholder" data-i18n-aria="chatAria" placeholder="اكتبي سؤالك هنا..." aria-label="رسالتك">
+          <button type="submit" aria-label="Send">↑</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 DorraJewelery</span>
+    <a href="https://instagram.com/dorrajewelery">Instagram</a>
+    <a href="https://tiktok.com/@dorrajewelery">TikTok</a>
+    <a href="https://wa.me/971503375035">WhatsApp +971 503375035</a>
+    <span data-i18n="returnPolicy">لا يوجد لدينا إرجاع</span>
+  </footer>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-head"><h2 data-i18n="cart">سلة المشتريات</h2><button id="closeCart" type="button" aria-label="Close cart">×</button></div>
+    <div id="cartItems" class="cart-items"><p class="empty-cart" data-i18n="emptyCart">السلة فارغة حاليًا.</p></div>
+    <div class="cart-footer"><div><span data-i18n="total">الإجمالي</span><strong id="cartTotal">0 د.إ</strong></div><a href="{% url 'checkout' %}" data-i18n="checkout">متابعة إلى الدفع</a></div>
+  </aside>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <div class="modal-backdrop" id="productBackdrop"></div>
+  <section class="product-modal" id="productModal" aria-hidden="true" aria-modal="true" role="dialog" aria-label="Product details">
+    <button class="modal-close" id="closeModal" type="button" aria-label="Close product">×</button>
+    <div id="modalContent"></div>
+  </section>
+  {{ products|json_script:"products-data" }}
+  <script src="{% static 'app.js' %}"></script>
+</body>
+</html>

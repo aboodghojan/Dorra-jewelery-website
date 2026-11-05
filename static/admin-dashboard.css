@@ -1,0 +1,223 @@
+.admin-dashboard {
+  --dashboard-border: #e5eaf0;
+  --dashboard-muted: #718096;
+  --dashboard-ink: #1f2937;
+  color: var(--dashboard-ink);
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+.dashboard-heading,
+.dashboard-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-heading {
+  margin: 0 0 1.5rem;
+}
+
+.dashboard-heading h1,
+.dashboard-panel-heading h2 {
+  margin: 0;
+  color: var(--dashboard-ink);
+  font-weight: 700;
+}
+
+.dashboard-heading p,
+.dashboard-panel-heading p {
+  margin: .35rem 0 0;
+  color: var(--dashboard-muted);
+}
+
+.dashboard-eyebrow {
+  color: #6875d9 !important;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.dashboard-primary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: .6rem 1rem;
+  border-radius: .55rem;
+  background: #5263c7;
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+
+.dashboard-primary-link:hover,
+.dashboard-primary-link:focus-visible {
+  background: #414fa8;
+  color: #fff !important;
+}
+
+.dashboard-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-kpi {
+  display: grid;
+  grid-template-columns: 2.8rem 1fr;
+  align-items: center;
+  column-gap: .8rem;
+  row-gap: .25rem;
+  min-height: 132px;
+  padding: 1.1rem;
+  border: 1px solid var(--dashboard-border);
+  border-radius: .75rem;
+  background: #fff;
+  color: inherit !important;
+  text-decoration: none !important;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.dashboard-kpi:hover,
+.dashboard-kpi:focus-visible {
+  border-color: #b9c2ee;
+  box-shadow: 0 8px 24px rgb(31 41 55 / 8%);
+  transform: translateY(-2px);
+}
+
+.dashboard-kpi-icon {
+  display: grid;
+  grid-row: span 3;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: .7rem;
+  font-size: 1.1rem;
+}
+
+.icon-products { background: #eef0ff; color: #5263c7; }
+.icon-pending { background: #fff4df; color: #a66a00; }
+.icon-sales { background: #e7f7ef; color: #23845b; }
+
+.dashboard-kpi-label,
+.dashboard-kpi-detail {
+  color: var(--dashboard-muted);
+  font-size: .85rem;
+}
+
+.dashboard-kpi strong {
+  color: var(--dashboard-ink);
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+.dashboard-kpi strong small {
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.dashboard-panel {
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--dashboard-border);
+  border-radius: .75rem;
+  background: #fff;
+}
+
+.dashboard-panel-heading {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--dashboard-border);
+}
+
+.dashboard-panel-heading h2 {
+  font-size: 1.05rem;
+}
+
+.dashboard-panel-heading a,
+.dashboard-table a {
+  color: #5263c7;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dashboard-panel-heading a:hover,
+.dashboard-table a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-table-wrap {
+  overflow-x: auto;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: .85rem 1.25rem;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.dashboard-table th {
+  background: #f8fafc;
+  color: var(--dashboard-muted);
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.dashboard-table td {
+  color: #354052;
+  font-size: .88rem;
+}
+
+.dashboard-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.dashboard-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.6rem;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  background: #edf0f4;
+  color: #566174;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.status-pending { background: #fff4df; color: #946000; }
+.status-confirmed { background: #e9edff; color: #4554ad; }
+.status-shipped { background: #e5f4ff; color: #176a9c; }
+.status-delivered { background: #e7f7ef; color: #21734f; }
+.status-cancelled { background: #ffebeb; color: #a43d3d; }
+
+.dashboard-empty {
+  padding: 2rem !important;
+  color: var(--dashboard-muted) !important;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .dashboard-heading,
+  .dashboard-panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-primary-link {
+    width: 100%;
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: .75rem .9rem;
+  }
+}
