@@ -3,3 +3,5 @@ Pillow>=11.0
 django-db-connection-pool[mysql]>=1.2.4,<2
 gunicorn
 whitenoise
+pymysql
+cryptography
